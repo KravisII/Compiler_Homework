@@ -5,21 +5,79 @@
 	<title>编译原理 实验1 词法分析</title>
 </head>
 <style>
+.wrapper {
+	min-width: 320px;
+	max-width: 1080px;
+	width: 100%;
+	margin: 0 auto;
+	background: #222;
+	display: flex;
+	align-content: space-between;
+}
+
+	.input-area {
+		background: #AAA;
+		padding: 1em;
+		flex: 0 0 320px;
+	}
+
+		#input-form {
+			display: block;
+			width: 100%;
+			box-sizing: border-box;
+			outline: 0 none;
+			height: 100vh;
+			max-height: 600px;
+			resize: none;
+		}
+
+		.input-buttons {
+			display: flex;
+			align-content: space-between;
+		}
+			.input-buttons > button {
+				width: 100%;
+			}
+
+		#input-submit {
+
+		}
+
+		#input-form,
+		#input-submit {
+			
+		}
+
+	.control-line {
+		border-left: 10px solid red;
+		cursor: col-resize;
+	}
+
+	.output-area {
+		background: #CCC;
+		padding: 1em;
+		flex: auto;
+	}
+
 </style>
 <body>
-	<div id="input">
-		<textarea id="input-form" rows="10" cols="50"></textarea>
-		<button id="input-submit">Submit</button>
-	</div>
 
-	<div id="process">
-		<h1>Process</h1>
+<div class="wrapper">
+	<div class="input-area">
+		<textarea id="input-form" ></textarea>
+		<div class="input-buttons">
+			<button id="input-submit">Submit</button>
+			<button id="input-cancel">Cancel</button>
+		</div>
+	</div>
+	<div class="control-line"></div>
+	<div class="output-area">
 		<div id="process-content"></div>
+		<div id="output-content"></div>		
 	</div>
-	<div id="output">
-		<h1>Output</h1>
-		<div id="output-content"></div>
-	</div>
+</div>
+
+
 </body>
 <script>
 var LexicalAnalyser = {
