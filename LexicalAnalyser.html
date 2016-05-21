@@ -5,20 +5,32 @@
 	<title>编译原理 实验1 词法分析</title>
 </head>
 <style>
+body {
+	margin: 0;
+}
 .wrapper {
+	-webkit-user-select:none;
 	min-width: 320px;
 	max-width: 1080px;
 	width: 100%;
+	height: 100vh;
 	margin: 0 auto;
 	background: #222;
 	display: flex;
 	align-content: space-between;
 }
 
+	.input-area,
+	.output-area {
+		min-width: 320px !important;
+	}
+
 	.input-area {
 		background: #AAA;
 		padding: 1em;
-		flex: 0 0 320px;
+		display: flex;
+		flex-direction: column;
+		align-content: space-between;
 	}
 
 		#input-form {
@@ -26,8 +38,9 @@
 			width: 100%;
 			box-sizing: border-box;
 			outline: 0 none;
-			height: 100vh;
-			max-height: 600px;
+			/*flex: 1 1 300px;*/
+			flex-grow: 1;
+			/*max-height: 600px;*/
 			resize: none;
 		}
 
@@ -54,6 +67,7 @@
 	}
 
 	.output-area {
+		overflow-y: auto;
 		background: #CCC;
 		padding: 1em;
 		flex: auto;
@@ -301,6 +315,68 @@ var LexicalAnalyser = {
 	}
 };
 
+var ViewController = {
+	create: function () {
+		var o = {};
+
+		o.initialize = function () {
+			this.setNodeReferences();
+			this.setEventListeners();
+		};
+
+// <div class="wrapper">
+// 	<div class="input-area">
+// 		<textarea id="input-form" ></textarea>
+// 		<div class="input-buttons">
+// 			<button id="input-submit">Submit</button>
+// 			<button id="input-cancel">Cancel</button>
+// 		</div>
+// 	</div>
+// 	<div class="control-line"></div>
+// 	<div class="output-area">
+// 		<div id="process-content"></div>
+// 		<div id="output-content"></div>		
+// 	</div>
+// </div>
+
+		o.setNodeReferences = function () {
+			this.wrapper = document.querySelector(".wrapper");
+			this.inputArea = document.querySelector(".input-area");
+			this.controlLine = document.querySelector(".control-line");
+			this.outputArea = document.querySelector(".output-area");
+		};
+
+		o.setEventListeners = function () {
+			this.controlLine.addEventListener("mousedown", this.onLineMouseDown, false);
+		}
+
+		o.onLineMouseDown = function (event) {
+			console.log(this);
+			o._left = o.wrapper.getBoundingClientRect().left;
+			o._width = o.wrapper.getBoundingClientRect().width;
+			document.addEventListener("mousemove", o.onMouseMove, false);
+			document.addEventListener("mouseup", o.onMouseUp, false);
+		};
+
+		o.onMouseMove = function (event) {
+			var _percent = (event.clientX - o._left) / o._width;
+			// o.inputArea.style.width = (event.clientX - o._left) + "px";
+			o.inputArea.style.width = ((_percent * o._width) - 5) + "px";
+			o.outputArea.style.width = (((1 - _percent) * o._width) - 5) + "px";
+		};
+
+		o.onMouseUp = function (event) {
+			console.log(this + "moveup");
+			document.removeEventListener("mousemove", o.onMouseMove, false);
+			document.removeEventListener("mouseup", o.onMouseUp, false);
+		};
+
+		o.initialize();
+		return o;
+	}
+};
+
 var LA = LexicalAnalyser.create();
+var VC = ViewController.create();
 </script>
 </html>
