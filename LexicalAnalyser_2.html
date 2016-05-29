@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" class="no-backdropfilter no-touch">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<title>编译原理 实验1 词法分析</title>
+	<link rel="stylesheet" href="global-header.css">
+</head>
+<body>
+<nav class="global-nav">
+    <div class="gn-wrapper">
+
+        <div class="gn-icons">
+            <span class="gn-icons-item gn-kravis"><a href="#" class="gn-kravis-content"></a></span>
+            <span class="gn-icons-item gn-menu-icon js gn-button">
+                <span class="gn-menu-icon--top"><span class="gn-menu-icon--top-content"></span></span>
+                <span class="gn-menu-icon--middle"><span class="gn-menu-icon--middle-content"></span></span>
+                <span class="gn-menu-icon--bottom"><span class="gn-menu-icon--bottom-content"></span></span>
+            </span>
+        </div>
+
+        <div class="gn-menu js">
+            <ul class="gn-menu-items">
+                <li class="gn-menu-item about">
+                    <a class="gn-menu-link" href="#">About</a>
+                </li>
+
+                <li class="gn-menu-item demos has-sub">
+                    <a class="gn-menu-link" href="#">Demos</a>
+                    <ul class="gn-menu-sub-items">
+                        <li class="gn-menu-sub-item"><a class="gn-menu-sub-link" href="#">Music Player</a></li>
+                        <li class="gn-menu-sub-item"><a class="gn-menu-sub-link" href="#">Lyric Controller</a></li>
+                        <li class="gn-menu-sub-item"><a class="gn-menu-sub-link" href="#">Music Controller</a></li>
+                        <li class="gn-menu-sub-item"><a class="gn-menu-sub-link" href="#">Lexical Analyser</a></li>
+                    </ul>
+                </li>
+
+                <li class="gn-menu-item types has-sub">
+                    <a class="gn-menu-link" href="#">Types</a>
+                    <ul class="gn-menu-sub-items">
+                        <li class="gn-menu-sub-item"><a class="gn-menu-sub-link" href="#">Articles</a></li>
+                        <li class="gn-menu-sub-item"><a class="gn-menu-sub-link" href="#">Photos</a></li>
+                        <li class="gn-menu-sub-item"><a class="gn-menu-sub-link" href="#">Others</a></li>
+                    </ul>
+                </li>
+
+                <li class="gn-menu-item search"><a class="gn-menu-link" href="#">Search</a></li>
+                <input class="gn-searchform-input js" type="text" placeholder="Search">
+            </ul>
+        </div>
+
+    </div>
+</nav>
+
+<div id="gn-viewport-emitter"></div>
+<div class="gn-curtain"></div>
+
+<style>
+	.wrapper {
+		width: 100%;
+		min-width: 320px;
+		padding: 0 20px;
+		box-sizing: border-box;
+		
+	}
+
+	.wrapper-inner {
+		width: 100%;
+		max-width: 980px;
+		margin: 0 auto;
+		display: flex;
+		flex-flow: row;
+		justify-content: space-between;
+		/*background: red;*/
+	}
+
+	.input-area {
+		background: #D8D8D8;
+		flex-grow: 1;
+		flex-basis: 290px;
+	}
+
+	.middle-line {
+		width: 4px;
+		height: calc(100vh - 49px);
+		background: #000;
+	}
+
+	.output-area {
+		flex-grow: 1;
+		background: #D8D8D8;
+		
+	}
+#input-textarea {
+	resize: none;
+}
+
+@media screen and (max-width: 470px) {
+	.wrapper {
+		padding: 0 15px;
+	}
+}
+
+</style>
+
+	<div class="wrapper">
+		<div class="wrapper-inner">
+			<div class="input-area">
+				<header class="input-area-title">
+					<h1>Input Area</h1>
+				</header>
+				<div class="input-area-container">
+					<textarea name="input-textarea" id="input-textarea"></textarea>
+				</div>
+				<div class="input-area-buttons">
+					<button>Cancel</button>
+					<button>Submit</button>
+				</div>
+			</div>
+
+			<div class="middle-line"></div>
+
+			<div class="output-area">
+				<header class="output-area-title">
+					<h1>Output Area</h1>
+				</header>
+				<div class="output-area-container">
+					<section class="source-code">
+						<header class="source-code-title">
+							<h2>Source Code</h2>
+						</header>
+					</section>
+					<section class="after-preprocess">
+						<header class="after-preprocess-title">
+							<h2>After Preprocess</h2>
+						</header>
+					</section>
+					<section class="token-list">
+						<header class="token-list-title">
+							<h2>Token List</h2>
+						</header>
+					</section>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</body>
+<script src="global-header.js"></script>
+</html>
