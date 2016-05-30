@@ -63,14 +63,12 @@
 	.wrapper {
 		width: 100%;
 		min-width: 320px;
-		padding: 0 20px;
 		box-sizing: border-box;
-		
 	}
 
 	.wrapper-inner {
 		width: 100%;
-		max-width: 980px;
+		max-width: 1020px;
 		margin: 0 auto;
 		display: flex;
 		flex-direction: row;
@@ -81,9 +79,21 @@
 
 	.input-area {
 		background: #D8D8D8;
-		/*width: calc(30% - 2px);*/
 		width: 50%;
 		min-width: 180px !important;
+	}
+
+	#input-textarea {
+		resize: none;
+		outline: 0 none;
+		border: 0 none;
+		width: 100%;
+		min-height: 480px;
+		font-size: 16px;
+		font-family: Menlo;
+		background: transparent;
+		box-sizing: border-box;
+		padding: 25px 20px;
 	}
 
 	.middle-line {
@@ -94,17 +104,97 @@
 
 	.output-area {
 		background: #D8D8D8;
-		/*width: calc(70% - 2px);*/
 		width: 50%;
 		min-width: 180px !important;
 	}
-#input-textarea {
-	resize: none;
-}
+
+	.input-area-title,
+	.output-area-title {
+		background-color: #F8F8F8;
+	}
+
+	.input-area-title > h1,
+	.output-area-title > h1 {
+		margin: 0;
+		font-size: 24px;
+		font-weight: 500;
+		line-height: 2em;
+		padding: 0 1em;
+	}
+
+	.input-area-container {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.input-area-buttons {
+		width: 100%;
+		display: flex;
+		justify-content: space-around;
+		margin-bottom: 1em;
+	}
+
+	.small .input-area-buttons {
+		flex-direction: column;
+	}
+
+	.input-area-buttons > button {
+		width: 48%;
+		max-width: 240px;
+		border: 0 none;
+		color: #FFF;
+		font-size: 16px;
+		padding: 12px 0 13px;
+		cursor: pointer;
+		transition: background 0.25s;
+		outline: 0 none;
+	}
+
+	.small .input-area-buttons > button {
+		max-width: 1080px;
+		width: 100%;
+	}
+
+	.small .input-area-buttons > button:nth-child(1) {
+		order: 1;
+		margin-top: 0.5em;
+	}
+
+	.small .input-area-buttons > button:nth-child(2) {
+		order: 0;	
+	}
+
+	.input-area-buttons > button.cancel {
+		background: #e74c3c;
+	}
+
+	.input-area-buttons > button.cancel:hover,
+	.input-area-buttons > button.cancel:focus {
+		background: #ec7063;
+	}	
+
+	.input-area-buttons > button.cancel:active {
+		background: #dc2d1b;
+	}
+
+	.input-area-buttons > button.submit {
+		background: #3498db;
+	}
+
+	.input-area-buttons > button.submit:hover,
+	.input-area-buttons > button.submit:focus {
+		background: #5dade2;
+	}	
+
+	.input-area-buttons > button.submit:active {
+		background: #2383c4;
+	}
+
+
 
 @media screen and (max-width: 470px) {
 	.wrapper {
-		padding: 0 15px;
+		/*padding: 0 15px;*/
 	}
 }
 
@@ -118,10 +208,10 @@
 				</header>
 				<div class="input-area-container">
 					<textarea name="input-textarea" id="input-textarea"></textarea>
-				</div>
-				<div class="input-area-buttons">
-					<button>Cancel</button>
-					<button>Submit</button>
+					<div class="input-area-buttons">
+						<button class="cancel">Cancel</button>
+						<button class="submit">Submit</button>
+					</div>
 				</div>
 			</div>
 
@@ -188,6 +278,11 @@ var ViewController = {
 			var _percent = (event.clientX - o.wrapperInner_left) * 100 / o.wrapperInner_width;
 			o.inputArea.style.width = _percent + "%";
 			o.outputArea.style.width = (100 - _percent) + "%";
+			if (parseInt(getComputedStyle(o.inputArea).width) <= 370) {
+				o.inputArea.classList.add("small");
+			} else {
+				o.inputArea.classList.remove("small");
+			}
 		};
 
 		o.onMouseUpMiddleLine = function () {
