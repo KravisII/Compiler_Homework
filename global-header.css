@@ -444,6 +444,7 @@ body,
             .gn-icons {
                 width: 100%;
                 display: flex;
+                overflow: hidden;
                 flex-direction: row;
                 justify-content: space-between;
                 border-bottom: 1px solid #e2e2e2;

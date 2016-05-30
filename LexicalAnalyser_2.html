@@ -56,6 +56,10 @@
 <div class="gn-curtain"></div>
 
 <style>
+	.no-select {
+		-webkit-user-select:none;
+	}
+
 	.wrapper {
 		width: 100%;
 		min-width: 320px;
@@ -69,27 +73,30 @@
 		max-width: 980px;
 		margin: 0 auto;
 		display: flex;
-		flex-flow: row;
+		flex-direction: row;
 		justify-content: space-between;
-		/*background: red;*/
+		background: #444;
+
 	}
 
 	.input-area {
 		background: #D8D8D8;
-		flex-grow: 1;
-		flex-basis: 290px;
+		/*width: calc(30% - 2px);*/
+		width: 50%;
+		min-width: 180px !important;
 	}
 
 	.middle-line {
 		width: 4px;
-		height: calc(100vh - 49px);
 		background: #000;
+		cursor: col-resize;
 	}
 
 	.output-area {
-		flex-grow: 1;
 		background: #D8D8D8;
-		
+		/*width: calc(70% - 2px);*/
+		width: 50%;
+		min-width: 180px !important;
 	}
 #input-textarea {
 	resize: none;
@@ -147,4 +154,65 @@
 	</div>
 </body>
 <script src="global-header.js"></script>
+<script>
+var ViewController = {
+	create: function () {
+		var o = {};
+
+		o.initialize = function () {
+			this.setNodeReferences();
+			this.setNodeEvents();
+		};
+
+		o.setNodeReferences = function () {
+			this.middleLine = document.querySelector(".middle-line");
+			this.wrapper = document.querySelector(".wrapper");
+			this.wrapperInner = document.querySelector(".wrapper-inner");
+			this.inputArea = document.querySelector(".input-area");
+			this.outputArea = document.querySelector(".output-area");
+		};
+
+		o.setNodeEvents = function () {
+			this.middleLine.addEventListener("mousedown", this.onMouseDownMiddleLine.bind(this), false);
+		};
+
+		o.onMouseDownMiddleLine = function () {
+			this.wrapperInner_left = this.wrapperInner.getBoundingClientRect().left;
+			this.wrapperInner_width = this.wrapperInner.getBoundingClientRect().width;
+			this.wrapper.classList.add("no-select");
+			document.addEventListener("mousemove", this.onMouseMoveMiddleLine, false);
+			document.addEventListener("mouseup", this.onMouseUpMiddleLine, false);
+		};
+
+		o.onMouseMoveMiddleLine = function (event) {
+			var _percent = (event.clientX - o.wrapperInner_left) * 100 / o.wrapperInner_width;
+			o.inputArea.style.width = _percent + "%";
+			o.outputArea.style.width = (100 - _percent) + "%";
+		};
+
+		o.onMouseUpMiddleLine = function () {
+			o.wrapper.classList.remove("no-select");
+			document.removeEventListener("mousemove", o.onMouseMoveMiddleLine, false);
+			document.removeEventListener("mouseup", o.onMouseUpMiddleLine, false);
+		};
+
+		o.initialize();
+		return o;
+	}
+};
+
+var VC = ViewController.create();
+
+
+	// var middleLine = $(".middle-line");
+
+	// function onMouseDownMiddleLine() {
+	// 	alert("Hello");
+	// }
+
+	// middleLine.addEventListener("mousedown", onMouseDownMiddleLine, false);
+
+
+	// middleLine
+</script>
 </html>
