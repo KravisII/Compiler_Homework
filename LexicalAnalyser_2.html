@@ -3,13 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-	<title>编译原理 实验1 词法分析</title>
-	<link rel="stylesheet" href="global-header.css">
+    <title>编译原理 实验1 词法分析</title>
+    <link rel="stylesheet" href="global-header.css">
 </head>
 <body>
 <nav class="global-nav">
     <div class="gn-wrapper">
-
         <div class="gn-icons">
             <span class="gn-icons-item gn-kravis"><a href="#" class="gn-kravis-content"></a></span>
             <span class="gn-icons-item gn-menu-icon js gn-button">
@@ -18,13 +17,11 @@
                 <span class="gn-menu-icon--bottom"><span class="gn-menu-icon--bottom-content"></span></span>
             </span>
         </div>
-
         <div class="gn-menu js">
             <ul class="gn-menu-items">
                 <li class="gn-menu-item about">
                     <a class="gn-menu-link" href="#">About</a>
                 </li>
-
                 <li class="gn-menu-item demos has-sub">
                     <a class="gn-menu-link" href="#">Demos</a>
                     <ul class="gn-menu-sub-items">
@@ -34,7 +31,6 @@
                         <li class="gn-menu-sub-item"><a class="gn-menu-sub-link" href="#">Lexical Analyser</a></li>
                     </ul>
                 </li>
-
                 <li class="gn-menu-item types has-sub">
                     <a class="gn-menu-link" href="#">Types</a>
                     <ul class="gn-menu-sub-items">
@@ -43,7 +39,6 @@
                         <li class="gn-menu-sub-item"><a class="gn-menu-sub-link" href="#">Others</a></li>
                     </ul>
                 </li>
-
                 <li class="gn-menu-item search"><a class="gn-menu-link" href="#">Search</a></li>
                 <input class="gn-searchform-input js" type="text" placeholder="Search">
             </ul>
@@ -56,293 +51,398 @@
 <div class="gn-curtain"></div>
 
 <style>
-	.no-select {
-		-webkit-user-select:none;
-	}
+    .no-select {
+        -webkit-user-select:none;
+    }
 
-	.wrapper {
-		width: 100%;
-		min-width: 320px;
-		box-sizing: border-box;
-	}
+    .wrapper {
+        width: 100%;
+        min-width: 320px;
+        box-sizing: border-box;
+    }
 
-	.wrapper-inner {
-		width: 100%;
-		max-width: 1020px;
-		margin: 0 auto;
-		display: flex;
-		flex-direction: row;
-		justify-content: space-between;
-		background: #444;
-	}
+    .wrapper-inner {
+        width: 100%;
+        max-width: 1020px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
 
-	.input-area {
-		background: #D8D8D8;
-		width: 50%;
-		min-width: 180px !important;
-	}
+    .input-area {
+        background: #D8D8D8;
+        width: 50%;
+        min-width: 280px !important;
+    }
 
-	#input-textarea {
-		resize: none;
-		outline: 0 none;
-		border: 0 none;
-		width: 100%;
-		min-height: 480px;
-		font-size: 16px;
-		font-family: Menlo;
-		background: transparent;
-		box-sizing: border-box;
-		padding: 25px 20px;
-		flex-grow: 1;
-	}
+    #input-textarea {
+        resize: none;
+        outline: 0 none;
+        border: 0 none;
+        width: 100%;
+        font-size: 16px;
+        font-family: Menlo;
+        background: transparent;
+        box-sizing: border-box;
+        padding: 25px 20px;
+        flex-grow: 1;
+    }
 
-	.middle-line {
-		width: 4px;
-		background: #000;
-		cursor: col-resize;
-	}
+    .middle-line {
+        width: 4px;
+        background: #000;
+        cursor: col-resize;
+    }
 
-	.output-area {
-		background: #D8D8D8;
-		width: 50%;
-		min-width: 180px !important;
-	}
+    .output-area {
+        background: #D8D8D8;
+        width: 50%;
+        min-width: 300px !important;
+    }
 
-	.input-area-title,
-	.output-area-title {
-		background-color: #F8F8F8;
-	}
+    .input-area-title,
+    .output-area-title {
+        background-color: #F8F8F8;
+    }
 
-	.input-area-title > h1,
-	.output-area-title > h1 {
-		margin: 0;
-		font-size: 24px;
-		font-weight: 500;
-		line-height: 2em;
-		padding: 0 24px;
-	}
+    .input-area-title > h1,
+    .output-area-title > h1 {
+        margin: 0;
+        font-size: 22px;
+        font-weight: 500;
+        line-height: 2em;
+        padding: 0 22px;
+    }
 
-	.input-area-container {
-		display: flex;
-		flex-direction: column;
-		justify-content: space-between;
-	}
+    .input-area-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
 
-.input-area-container,
-.output-area-container {
-	height: 600px;
-	box-sizing: border-box;
-}
+    .input-area-container,
+    .output-area-container {
+        height: calc(100vh - 100px);
+        box-sizing: border-box;
+    }
 
-.output-area-container {
-	overflow-y: scroll;
-	padding-top: 1em;
-}
+    .output-area-container {
+        overflow-y: scroll;
+        padding-top: 1em;
+    }
 
-	.input-area-buttons {
-		width: 100%;
-		display: flex;
-		justify-content: space-around;
-		margin-bottom: 1em;
-	}
+    .input-area-buttons {
+        width: 100%;
+        display: flex;
+        justify-content: space-around;
+        margin-bottom: 1em;
+    }
 
-	.small .input-area-buttons {
-		flex-direction: column;
-	}
+    .small .input-area-buttons {
+        flex-direction: column;
+    }
 
-	.input-area-buttons > button {
-		width: 48%;
-		max-width: 240px;
-		border: 0 none;
-		color: #FFF;
-		font-size: 16px;
-		padding: 12px 0 13px 0;
-		margin: 0;
-		cursor: pointer;
-		transition: background 0.25s;
-		outline: 0 none;
-	}
+    .input-area-buttons > button {
+        width: 48%;
+        max-width: 240px;
+        border: 0 none;
+        color: #FFF;
+        font-size: 16px;
+        padding: 12px 0 13px 0;
+        margin: 0;
+        cursor: pointer;
+        transition: background 0.25s;
+        outline: 0 none;
+    }
 
-	.small .input-area-buttons > button {
-		max-width: 1080px;
-		width: 100%;
-		height: 3em;
-	}
+    .small .input-area-buttons > button {
+        max-width: 1080px;
+        width: 100%;
+        height: 3em;
+    }
 
-.small .input-area-buttons > button + button {
-	margin-top: 0.5em;
-}
+    .small .input-area-buttons > button + button {
+        margin-top: 0.5em;
+    }
 
-	.input-area-buttons > button.cancel {
-		background: #e74c3c;
-	}
+    .input-area-buttons > button.cancel {
+        background: #e74c3c;
+    }
 
-	.input-area-buttons > button.cancel:hover,
-	.input-area-buttons > button.cancel:focus {
-		background: #ec7063;
-	}	
+    .input-area-buttons > button.cancel:hover,
+    .input-area-buttons > button.cancel:focus {
+        background: #ec7063;
+    }
 
-	.input-area-buttons > button.cancel:active {
-		background: #dc2d1b;
-	}
+    .input-area-buttons > button.cancel:active {
+        background: #dc2d1b;
+    }
 
-	.input-area-buttons > button.submit {
-		background: #3498db;
-	}
+    .input-area-buttons > button.submit {
+        background: #3498db;
+    }
 
-	.input-area-buttons > button.submit:hover,
-	.input-area-buttons > button.submit:focus {
-		background: #5dade2;
-	}	
+    .input-area-buttons > button.submit:hover,
+    .input-area-buttons > button.submit:focus {
+        background: #5dade2;
+    }
 
-	.input-area-buttons > button.submit:active {
-		background: #2383c4;
-	}
+    .input-area-buttons > button.submit:active {
+        background: #2383c4;
+    }
 
-	.output-area-container {
-	}
+    .output-area-container {
+    }
 
-	.output-area-container > section > header {
-		background: #AEAEAE;
-		padding: 0 24px;
-	}
+    .output-area-container > section > header {
+        background: #AEAEAE;
+        padding: 0 24px;
+    }
 
-	.output-area-container h2 {
-		font-size: 21px;
-		font-weight: 500;
-		line-height: 2em;
-		margin: 0;
-	}
+    .output-area-container h2 {
+        font-size: 18px;
+        font-weight: 500;
+        line-height: 2em;
+        margin: 0;
+    }
 
-	.output-area-container h2::after {
-		content: " >"
-	}
+    .output-area-container h2::after {
+        content: " >";
+    }
 
-	.section-container {
-		font-family: Menlo;
-		padding: 0 24px;
-		margin: 1em 0;
-	}
+    .section-container {
+        font-family: Menlo;
+        padding: 0 22px;
+        margin: 1em 0;
+    }
 
-@media screen and (max-width: 470px) {
-	.wrapper {
-		/*padding: 0 15px;*/
-	}
-}
+    .token-list {
+        width: 100%;
+        border-collapse: collapse;
+        empty-cells: show;
+        text-align: left;
+    }
+
+    .token-list > thead > tr {
+        border-bottom: 3px solid #000;
+    }
+
+    .token-list > thead > tr > th {
+        padding: 0px 0 8px;
+        font-family: "Myriad Set Pro", -apple-system, -apple-system-font, "Helvetica Neue", "Arial", "PingFang SC", "Hiragino Sans GB", "STHeiti", "Microsoft YaHei", "Microsoft JhengHei", "Source Han Sans SC", "Noto Sans CJK SC", "Source Han Sans CN", "Noto Sans SC", "Source Han Sans TC", "Noto Sans CJK TC", "WenQuanYi Micro Hei", SimSun, sans-serif;
+    }
+
+    .token-list tr > th:nth-child(1),
+    .token-list tr > th:nth-child(1) {
+        width: 30%;
+        padding-left: 1em;
+    }
+
+    .token-list > tbody > tr > th {
+        padding: 6px 0 7px;
+        font-weight: 100;
+    }
+
+    .token-list > tbody > tr:nth-child(2n) {
+        background: #C0C0C0;
+    }
+
+    .token-list > tbody > tr:hover {
+        background: #A3A3A3;
+    }
+
+    @media screen and (max-width: 768px) {
+        .wrapper-inner {
+            flex-direction: column;
+        }
+
+        .middle-line {
+            display: none;
+        }
+
+        .input-area,
+        .output-area {
+            width: 100% !important;
+        }
+
+        .input-area-container {
+            height: 100%;
+        }
+
+        #input-textarea {
+            height: 320px;
+        }
+
+        .output-area-container {
+            overflow: visible;
+            height: auto;
+        }
+    }
+
+    @media screen and (max-width: 414px) {
+        .input-area-buttons {
+            flex-direction: column;
+        }
+        .input-area-buttons > button {
+            max-width: 1080px;
+            width: 100%;
+            height: 3em;
+        }
+
+        .input-area-buttons > button + button {
+            margin-top: 0.5em;
+        }
+    }
 
 </style>
 
-	<div class="wrapper">
-		<div class="wrapper-inner">
-			<div class="input-area">
-				<header class="input-area-title">
-					<h1>Input Area</h1>
-				</header>
-				<div class="input-area-container">
-					<textarea name="input-textarea" id="input-textarea"></textarea>
-					<div class="input-area-buttons">
-						<button class="cancel">Cancel</button>
-						<button class="submit">Submit</button>
-					</div>
-				</div>
-			</div>
+<div class="wrapper">
+    <div class="wrapper-inner">
+        <div class="input-area">
+            <header class="input-area-title">
+                <h1>Input Area</h1>
+            </header>
+            <div class="input-area-container">
+                <textarea name="input-textarea" id="input-textarea"></textarea>
+                <div class="input-area-buttons">
+                    <button class="cancel">Cancel</button>
+                    <button class="submit">Submit</button>
+                </div>
+            </div>
+        </div>
 
-			<div class="middle-line"></div>
+        <div class="middle-line"></div>
 
-			<div class="output-area">
-				<header class="output-area-title">
-					<h1>Output Area</h1>
-				</header>
-				<div class="output-area-container">
-					<section class="source-code">
-						<header class="source-code-title">
-							<h2>Source Code</h2>
-						</header>
-						<div class="source-code-container section-container">oluptatum placeat quia nihil. Modi, eius.</div>
-					</section>
-					<section class="after-preprocess">
-						<header class="after-preprocess-title">
-							<h2>After Preprocess</h2>
-						</header>
-						<div class="after-preprocess-container section-container">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolores magnam, nulla officia sed accusamus animi fugiat incidunt rem veniam quaerat fugit repudiandae sint alias eius voluptatem veritatis consequatur? Temporibus, numquam. ipsum dolor sit amet, consectetur adipisicing elit. Minus accusantium excepturi obcaecati tempore repellat cupiditate voluptatum eaque, in eius quod neque nobis libero nesciunt, ea rem expedita praesentium inventore beatae. ipsum dolor sit amet, consectetur adipisicing elit. Nisi quis minima, ab, porro error optio velit, sit culpa vero iste hic eligendi aliquam voluptates ipsum. Eos magni doloribus quibusdam culpa? ipsum dolor sit amet, consectetur adipisicing elit. Assumenda debitis nemo, minus ipsum neque, obcaecati facere odit explicabo suscipit maxime quaerat. Ad repellat tempore quasi necessitatibus architecto eius obcaecati sequi. ipsum dolor sit amet, consectetur adipisicing elit. Est reprehenderit nihil consequatur pariatur culpa dolor debitis doloremque. Autem voluptatibus omnis nesciunt facilis qui! Ea, aliquid mollitia temporibus natus velit voluptatem. ipsum dolor sit amet, consectetur adipisicing elit. Praesentium culpa doloribus, dignissimos nihil iusto voluptatum quia aspernatur facere non nulla qui alias ut molestiae perspiciatis aperiam aliquam quos, sunt iste! ipsum dolor sit amet, consectetur adipisicing elit. In fugiat enim velit doloremque, pariatur incidunt quaerat quibusdam facere optio adipisci odio mollitia inventore tempora illum ullam? Qui, sequi, accusantium. Dicta.</div>
-					</section>
-					<section class="token-list">
-						<header class="token-list-title">
-							<h2>Token List</h2>
-						</header>
-						<div class="token-list-container section-container">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolores magnam, nulla officia sed accusamus animi fugiat incidunt rem veniam quaerat fugit repudiandae sint alias eius voluptatem veritatis consequatur? Temporibus, numquam. ipsum dolor sit amet, consectetur adipisicing elit. Minus accusantium excepturi obcaecati tempore repellat cupiditate voluptatum eaque, in eius quod neque nobis libero nesciunt, ea rem expedita praesentium inventore beatae. ipsum dolor sit amet, consectetur adipisicing elit. Nisi quis minima, ab, porro error optio velit, sit culpa vero iste hic eligendi aliquam voluptates ipsum. Eos magni doloribus quibusdam culpa? ipsum dolor sit amet, consectetur adipisicing elit. Assumenda debitis nemo, minus ipsum neque, obcaecati facere odit explicabo suscipit maxime quaerat. Ad repellat tempore quasi necessitatibus architecto eius obcaecati sequi. ipsum dolor sit amet, consectetur adipisicing elit. Est reprehenderit nihil consequatur pariatur culpa dolor debitis doloremque. Autem voluptatibus omnis nesciunt facilis qui! Ea, aliquid mollitia temporibus natus velit voluptatem. ipsum dolor sit amet, consectetur adipisicing elit. Praesentium culpa doloribus, dignissimos nihil iusto voluptatum quia aspernatur facere non nulla qui alias ut molestiae perspiciatis aperiam aliquam quos, sunt iste! ipsum dolor sit amet, consectetur adipisicing elit. In fugiat enim velit doloremque, pariatur incidunt quaerat quibusdam facere optio adipisci odio mollitia inventore tempora illum ullam? Qui, sequi, accusantium. Dicta.</div>
-					</section>
-				</div>
-			</div>
+        <div class="output-area">
+            <header class="output-area-title">
+                <h1>Output Area</h1>
+            </header>
+            <div class="output-area-container">
+                <section class="source-code">
+                    <header class="source-code-title">
+                        <h2>Source Code</h2>
+                    </header>
+                    <div class="source-code-container section-container">oluptatum placeat quia nihil. Modi, eius.</div>
+                </section>
+                <section class="after-preprocess">
+                    <header class="after-preprocess-title">
+                        <h2>After Preprocess</h2>
+                    </header>
+                    <div class="after-preprocess-container section-container">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolores magnam, nulla officia sed accusamus animi fugiat incidunt rem veniam quaerat fugit repudiandae sint alias eius voluptatem veritatis consequatur? Temporibus, numquam. ipsum dolor sit amet, consectetur adipisicing elit. Minus accusantium excepturi obcaecati tempore repellat cupiditate voluptatum eaque, in eius quod neque nobis libero nesciunt, ea rem expedita praesentium inventore beatae. ipsum dolor sit amet, consectetur adipisicing elit. Nisi quis minima, ab, porro error optio velit, sit culpa vero iste hic eligendi aliquam voluptates ipsum. Eos magni doloribus quibusdam culpa? ipsum dolor sit amet, consectetur adipisicing elit.</div>
+                </section>
+                <section class="token-list">
+                    <header class="token-list-title">
+                        <h2>Token List</h2>
+                    </header>
+                    <div class="token-list-container section-container">
+                        <table class="token-list">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Type</th>
+                                <th>Value</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <th>1</th>
+                                <th>identifier</th>
+                                <th>b</th>
+                            </tr>
+                            <tr>
+                                <th>2</th>
+                                <th>operator</th>
+                                <th>=</th>
+                            </tr>
+                            <tr>
+                                <th>3</th>
+                                <th>const</th>
+                                <th>100</th>
+                            </tr>
+                            <tr>
+                                <th>4</th>
+                                <th>linenumber</th>
+                                <th>101</th>
+                            </tr>
+                            <tr>
+                                <th>5</th>
+                                <th>delimiter</th>
+                                <th>:</th>
+                            </tr>
+                            <tr>
+                                <th>6</th>
+                                <th>identifier</th>
+                                <th>a</th>
+                            </tr>
+                            <tr>
+                                <th>7</th>
+                                <th>operator</th>
+                                <th>=</th>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </div>
 
-		</div>
-	</div>
+    </div>
+</div>
 </body>
 <script src="global-header.js"></script>
 <script>
-var ViewController = {
-	create: function () {
-		var o = {};
+    var ViewController = {
+        create: function () {
+            var o = {};
 
-		o.initialize = function () {
-			this.setNodeReferences();
-			this.setNodeEvents();
-		};
+            o.initialize = function () {
+                this.setNodeReferences();
+                this.setNodeEvents();
+            };
 
-		o.setNodeReferences = function () {
-			this.middleLine = document.querySelector(".middle-line");
-			this.wrapper = document.querySelector(".wrapper");
-			this.wrapperInner = document.querySelector(".wrapper-inner");
-			this.inputArea = document.querySelector(".input-area");
-			this.outputArea = document.querySelector(".output-area");
-		};
+            o.setNodeReferences = function () {
+                this.middleLine = document.querySelector(".middle-line");
+                this.wrapper = document.querySelector(".wrapper");
+                this.wrapperInner = document.querySelector(".wrapper-inner");
+                this.inputArea = document.querySelector(".input-area");
+                this.outputArea = document.querySelector(".output-area");
+            };
 
-		o.setNodeEvents = function () {
-			this.middleLine.addEventListener("mousedown", this.onMouseDownMiddleLine.bind(this), false);
-		};
+            o.setNodeEvents = function () {
+                this.middleLine.addEventListener("mousedown", this.onMouseDownMiddleLine.bind(this), false);
+            };
 
-		o.onMouseDownMiddleLine = function () {
-			this.wrapperInner_left = this.wrapperInner.getBoundingClientRect().left;
-			this.wrapperInner_width = this.wrapperInner.getBoundingClientRect().width;
-			this.wrapper.classList.add("no-select");
-			document.addEventListener("mousemove", this.onMouseMoveMiddleLine, false);
-			document.addEventListener("mouseup", this.onMouseUpMiddleLine, false);
-		};
+            o.onMouseDownMiddleLine = function () {
+                this.wrapperInner_left = this.wrapperInner.getBoundingClientRect().left;
+                this.wrapperInner_width = this.wrapperInner.getBoundingClientRect().width;
+                this.wrapper.classList.add("no-select");
+                document.addEventListener("mousemove", this.onMouseMoveMiddleLine, false);
+                document.addEventListener("mouseup", this.onMouseUpMiddleLine, false);
+            };
 
-		o.onMouseMoveMiddleLine = function (event) {
-			var _percent = (event.clientX - o.wrapperInner_left) * 100 / o.wrapperInner_width;
-			o.inputArea.style.width = _percent + "%";
-			o.outputArea.style.width = (100 - _percent) + "%";
-			if (parseInt(getComputedStyle(o.inputArea).width) <= 370) {
-				o.inputArea.classList.add("small");
-			} else {
-				o.inputArea.classList.remove("small");
-			}
-		};
+            o.onMouseMoveMiddleLine = function (event) {
+                var _percent = (event.clientX - o.wrapperInner_left) * 100 / o.wrapperInner_width;
+                o.inputArea.style.width = _percent + "%";
+                o.outputArea.style.width = (100 - _percent) + "%";
+                if (parseInt(getComputedStyle(o.inputArea).width) <= 370) {
+                    o.inputArea.classList.add("small");
+                } else {
+                    o.inputArea.classList.remove("small");
+                }
+            };
 
-		o.onMouseUpMiddleLine = function () {
-			o.wrapper.classList.remove("no-select");
-			document.removeEventListener("mousemove", o.onMouseMoveMiddleLine, false);
-			document.removeEventListener("mouseup", o.onMouseUpMiddleLine, false);
-		};
+            o.onMouseUpMiddleLine = function () {
+                o.wrapper.classList.remove("no-select");
+                document.removeEventListener("mousemove", o.onMouseMoveMiddleLine, false);
+                document.removeEventListener("mouseup", o.onMouseUpMiddleLine, false);
+            };
 
-		o.initialize();
-		return o;
-	}
-};
+            o.initialize();
+            return o;
+        }
+    };
 
-var VC = ViewController.create();
-
-
-	// var middleLine = $(".middle-line");
-
-	// function onMouseDownMiddleLine() {
-	// 	alert("Hello");
-	// }
-
-	// middleLine.addEventListener("mousedown", onMouseDownMiddleLine, false);
-
-
-	// middleLine
+    var VC = ViewController.create();
 </script>
 </html>
