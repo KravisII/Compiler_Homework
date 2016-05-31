@@ -74,7 +74,6 @@
 		flex-direction: row;
 		justify-content: space-between;
 		background: #444;
-
 	}
 
 	.input-area {
@@ -94,6 +93,7 @@
 		background: transparent;
 		box-sizing: border-box;
 		padding: 25px 20px;
+		flex-grow: 1;
 	}
 
 	.middle-line {
@@ -119,13 +119,25 @@
 		font-size: 24px;
 		font-weight: 500;
 		line-height: 2em;
-		padding: 0 1em;
+		padding: 0 24px;
 	}
 
 	.input-area-container {
 		display: flex;
 		flex-direction: column;
+		justify-content: space-between;
 	}
+
+.input-area-container,
+.output-area-container {
+	height: 600px;
+	box-sizing: border-box;
+}
+
+.output-area-container {
+	overflow-y: scroll;
+	padding-top: 1em;
+}
 
 	.input-area-buttons {
 		width: 100%;
@@ -144,7 +156,8 @@
 		border: 0 none;
 		color: #FFF;
 		font-size: 16px;
-		padding: 12px 0 13px;
+		padding: 12px 0 13px 0;
+		margin: 0;
 		cursor: pointer;
 		transition: background 0.25s;
 		outline: 0 none;
@@ -153,16 +166,12 @@
 	.small .input-area-buttons > button {
 		max-width: 1080px;
 		width: 100%;
+		height: 3em;
 	}
 
-	.small .input-area-buttons > button:nth-child(1) {
-		order: 1;
-		margin-top: 0.5em;
-	}
-
-	.small .input-area-buttons > button:nth-child(2) {
-		order: 0;	
-	}
+.small .input-area-buttons > button + button {
+	margin-top: 0.5em;
+}
 
 	.input-area-buttons > button.cancel {
 		background: #e74c3c;
@@ -190,7 +199,30 @@
 		background: #2383c4;
 	}
 
+	.output-area-container {
+	}
 
+	.output-area-container > section > header {
+		background: #AEAEAE;
+		padding: 0 24px;
+	}
+
+	.output-area-container h2 {
+		font-size: 21px;
+		font-weight: 500;
+		line-height: 2em;
+		margin: 0;
+	}
+
+	.output-area-container h2::after {
+		content: " >"
+	}
+
+	.section-container {
+		font-family: Menlo;
+		padding: 0 24px;
+		margin: 1em 0;
+	}
 
 @media screen and (max-width: 470px) {
 	.wrapper {
@@ -226,16 +258,19 @@
 						<header class="source-code-title">
 							<h2>Source Code</h2>
 						</header>
+						<div class="source-code-container section-container">oluptatum placeat quia nihil. Modi, eius.</div>
 					</section>
 					<section class="after-preprocess">
 						<header class="after-preprocess-title">
 							<h2>After Preprocess</h2>
 						</header>
+						<div class="after-preprocess-container section-container">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolores magnam, nulla officia sed accusamus animi fugiat incidunt rem veniam quaerat fugit repudiandae sint alias eius voluptatem veritatis consequatur? Temporibus, numquam. ipsum dolor sit amet, consectetur adipisicing elit. Minus accusantium excepturi obcaecati tempore repellat cupiditate voluptatum eaque, in eius quod neque nobis libero nesciunt, ea rem expedita praesentium inventore beatae. ipsum dolor sit amet, consectetur adipisicing elit. Nisi quis minima, ab, porro error optio velit, sit culpa vero iste hic eligendi aliquam voluptates ipsum. Eos magni doloribus quibusdam culpa? ipsum dolor sit amet, consectetur adipisicing elit. Assumenda debitis nemo, minus ipsum neque, obcaecati facere odit explicabo suscipit maxime quaerat. Ad repellat tempore quasi necessitatibus architecto eius obcaecati sequi. ipsum dolor sit amet, consectetur adipisicing elit. Est reprehenderit nihil consequatur pariatur culpa dolor debitis doloremque. Autem voluptatibus omnis nesciunt facilis qui! Ea, aliquid mollitia temporibus natus velit voluptatem. ipsum dolor sit amet, consectetur adipisicing elit. Praesentium culpa doloribus, dignissimos nihil iusto voluptatum quia aspernatur facere non nulla qui alias ut molestiae perspiciatis aperiam aliquam quos, sunt iste! ipsum dolor sit amet, consectetur adipisicing elit. In fugiat enim velit doloremque, pariatur incidunt quaerat quibusdam facere optio adipisci odio mollitia inventore tempora illum ullam? Qui, sequi, accusantium. Dicta.</div>
 					</section>
 					<section class="token-list">
 						<header class="token-list-title">
 							<h2>Token List</h2>
 						</header>
+						<div class="token-list-container section-container">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolores magnam, nulla officia sed accusamus animi fugiat incidunt rem veniam quaerat fugit repudiandae sint alias eius voluptatem veritatis consequatur? Temporibus, numquam. ipsum dolor sit amet, consectetur adipisicing elit. Minus accusantium excepturi obcaecati tempore repellat cupiditate voluptatum eaque, in eius quod neque nobis libero nesciunt, ea rem expedita praesentium inventore beatae. ipsum dolor sit amet, consectetur adipisicing elit. Nisi quis minima, ab, porro error optio velit, sit culpa vero iste hic eligendi aliquam voluptates ipsum. Eos magni doloribus quibusdam culpa? ipsum dolor sit amet, consectetur adipisicing elit. Assumenda debitis nemo, minus ipsum neque, obcaecati facere odit explicabo suscipit maxime quaerat. Ad repellat tempore quasi necessitatibus architecto eius obcaecati sequi. ipsum dolor sit amet, consectetur adipisicing elit. Est reprehenderit nihil consequatur pariatur culpa dolor debitis doloremque. Autem voluptatibus omnis nesciunt facilis qui! Ea, aliquid mollitia temporibus natus velit voluptatem. ipsum dolor sit amet, consectetur adipisicing elit. Praesentium culpa doloribus, dignissimos nihil iusto voluptatum quia aspernatur facere non nulla qui alias ut molestiae perspiciatis aperiam aliquam quos, sunt iste! ipsum dolor sit amet, consectetur adipisicing elit. In fugiat enim velit doloremque, pariatur incidunt quaerat quibusdam facere optio adipisci odio mollitia inventore tempora illum ullam? Qui, sequi, accusantium. Dicta.</div>
 					</section>
 				</div>
 			</div>
