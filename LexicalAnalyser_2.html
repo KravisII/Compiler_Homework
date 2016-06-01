@@ -129,6 +129,7 @@
 
     .output-area-container {
         overflow-y: scroll;
+        overflow-x: hidden;
         padding-top: 1em;
     }
 
@@ -217,43 +218,53 @@
         margin: 1em 0;
     }
 
-    .token-list {
+    .token-list-table {
         width: 100%;
         border-collapse: collapse;
         empty-cells: show;
         text-align: left;
+
+        /*Temp*/
+        /*table-layout: fixed;*/
     }
 
-    .token-list > thead > tr {
+    .token-list-table > thead > tr {
         border-bottom: 3px solid #000;
     }
 
-    .token-list > thead > tr > th {
+    .token-list-table > thead > tr > th {
         padding: 0 0 8px;
         font-family: "Myriad Set Pro", -apple-system, -apple-system-font, "Helvetica Neue", "Arial", "PingFang SC", "Hiragino Sans GB", "STHeiti", "Microsoft YaHei", "Microsoft JhengHei", "Source Han Sans SC", "Noto Sans CJK SC", "Source Han Sans CN", "Noto Sans SC", "Source Han Sans TC", "Noto Sans CJK TC", "WenQuanYi Micro Hei", SimSun, sans-serif;
     }
 
-    .token-list tr > th:nth-child(1),
-    .token-list tr > th:nth-child(1) {
-        width: 30%;
-        padding-left: 1em;
+    .token-list-table tr > th:nth-child(1),
+    .token-list-table tr > th:nth-child(1) {
+        padding: 6px 0.5em 7px;
     }
 
-    .token-list > tbody > tr > th {
+    .token-list-table > tbody > tr:nth-child(2n) {
+        background: #C0C0C0;
+    }
+
+    .token-list-table > tbody > tr:hover {
+        /*background: #A3A3A3;*/
+    }
+
+    .token-list-table > tbody > tr.error-token {
+    	background: #e74c3c;
+    }
+
+    .token-list-table > tbody > tr > th {
         padding: 6px 0 7px;
         font-weight: 100;
     }
 
-    .token-list > tbody > tr:nth-child(2n) {
-        background: #C0C0C0;
+    .token-list-table > tbody > tr > th:nth-child(2) {
+    	min-width: 124px;
     }
 
-    .token-list > tbody > tr:hover {
-        /*background: #A3A3A3;*/
-    }
-
-    .token-list > tbody > tr.error-token {
-    	background: #e74c3c;
+    .token-list-table > tbody > tr > th:nth-child(3) {
+    	min-width: 55px;
     }
 
     @media screen and (max-width: 768px) {
@@ -341,7 +352,7 @@
                         <h2>Token List</h2>
                     </header>
                     <div class="token-list-container section-container">
-                        <table class="token-list">
+                        <table class="token-list-table">
                             <thead></thead>
                             <tbody></tbody>
                         </table>
@@ -436,7 +447,7 @@
                 this.cancelButton = document.querySelector(".input-area-buttons > .cancel");
                 this.sourceCodeContainer = document.querySelector(".source-code-container");
                 this.afterPreprocessContainer = document.querySelector(".after-preprocess-container");
-                this.tokenList = document.querySelector(".token-list");
+                this.tokenListTable = document.querySelector(".token-list-table");
             };
 
             o.setEventListeners = function () {
@@ -448,13 +459,26 @@
             	if (this.TOKENNUM === 0) {
             		this.start();
             	} else {
-            		// Show Tip
-            		alert("Are you sure?");
+            		this.clearOutput();
+            		this.start();
             	}
             };
 
             o.clickCancel = function () {
-                // Clear All Data
+                this.clearInput();
+                this.clearOutput();
+                this.inputTextarea.focus();
+            };
+
+            o.clearInput = function () {
+            	this.inputTextarea.value = "";
+            };
+
+            o.clearOutput = function () {
+            	this.TOKENNUM = 0;
+            	this.sourceCodeContainer.innerText = "";
+				this.afterPreprocessContainer.innerText = "";
+				this.tokenListTable.innerHTML = "<thead></thead><tbody></tbody>";
             };
 
             o.setDataValue = function () {
@@ -529,7 +553,7 @@
                     this.TOKENNUM++;
                 }
 
-                var _tbody = this.tokenList.querySelector("tbody");
+                var _tbody = this.tokenListTable.querySelector("tbody");
                 _tbody.innerHTML += "<tr><th>" + this.TOKENNUM + "</th><th>" + _type + "</th><th>" + _value + "</th></tr>";
                 if (_type === "ERROR") {
                 	this.showErrorToken(this.TOKENNUM);
@@ -538,18 +562,18 @@
             };
 
             o.createTableHead = function () {
-                var _thead = this.tokenList.querySelector("thead");
+                var _thead = this.tokenListTable.querySelector("thead");
                 _thead.innerHTML = "<tr><th>#</th><th>Type</th><th>Value</th></tr>";
             };
 
             o.showErrorToken = function (_tokenNum) {
-            	var _tr = this.tokenList.querySelectorAll("tbody > tr");
+            	var _tr = this.tokenListTable.querySelectorAll("tbody > tr");
             	_tr[_tokenNum-1].classList.add("error-token");
             };
 
             // To be use
             o.clearTableHead = function () {
-                var _thead = this.tokenList.querySelector("thead");
+                var _thead = this.tokenListTable.querySelector("thead");
                 _thead.innerHTML = "";
             };
 
@@ -564,11 +588,15 @@
                     this.showToken(_letter, "keyword");
                     if (_letter === "GOTO") {
                         _i++;
-                        while (this.isNum(this.inputStr[_i])) {
-                            _lineNum += this.inputStr[_i];
-                            _i++;
+                        while (this.isAlNum(this.inputStr[_i])) {
+                        	_lineNum += this.inputStr[_i];
+                        	_i++;
                         }
-                        this.showToken(_lineNum, "linenumber");
+                        if (this.isInteger(_lineNum)) {
+                        	this.showToken(_lineNum, "linenumber");
+                        } else {
+                        	this.showToken(_lineNum, "ERROR");
+                        }
                     }
                 } else {
                     this.showToken(_letter, "identifier");
@@ -650,6 +678,10 @@
                 return !!(this.isNum(_char) || this.isAlpha(_char))
             };
 
+            o.isInteger = function (_str) {
+                return parseInt(_str, 10) + "" === _str;
+            };
+
             o.main();
             return o;
         }
@@ -659,3 +691,5 @@
     var LA = LexicalAnalyser.create();
 </script>
 </html>
+
+<!-- 56/241 120/241 49/241 -->
