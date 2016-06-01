@@ -252,6 +252,10 @@
         /*background: #A3A3A3;*/
     }
 
+    .token-list > tbody > tr.error-token {
+    	background: #e74c3c;
+    }
+
     @media screen and (max-width: 768px) {
         .wrapper {
             margin-top: 1em;
@@ -441,7 +445,12 @@
             };
 
             o.clickSubmit = function () {
-                this.start();
+            	if (this.TOKENNUM === 0) {
+            		this.start();
+            	} else {
+            		// Show Tip
+            		alert("Are you sure?");
+            	}
             };
 
             o.clickCancel = function () {
@@ -522,12 +531,20 @@
 
                 var _tbody = this.tokenList.querySelector("tbody");
                 _tbody.innerHTML += "<tr><th>" + this.TOKENNUM + "</th><th>" + _type + "</th><th>" + _value + "</th></tr>";
+                if (_type === "ERROR") {
+                	this.showErrorToken(this.TOKENNUM);
+                }
                 this.TOKENNUM++;
             };
 
             o.createTableHead = function () {
                 var _thead = this.tokenList.querySelector("thead");
                 _thead.innerHTML = "<tr><th>#</th><th>Type</th><th>Value</th></tr>";
+            };
+
+            o.showErrorToken = function (_tokenNum) {
+            	var _tr = this.tokenList.querySelectorAll("tbody > tr");
+            	_tr[_tokenNum-1].classList.add("error-token");
             };
 
             // To be use
