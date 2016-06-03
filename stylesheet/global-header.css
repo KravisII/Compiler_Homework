@@ -234,7 +234,7 @@ body.disable-scroll {
     height: 3em;
     width: 12px;
     margin-left: 5px;
-    background: url('menu-down.svg') no-repeat center / contain;
+    background: url('../image/menu-down.svg') no-repeat center / contain;
 }
 
 .gn-menu-sub-items {
