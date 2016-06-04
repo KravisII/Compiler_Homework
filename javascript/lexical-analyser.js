@@ -18,6 +18,7 @@ var ViewController = {
 
         o.setNodeEvents = function () {
             this.middleLine.addEventListener("mousedown", this.onMouseDownMiddleLine.bind(this), false);
+            // this.middleLine.addEventListener("touchstart", this.onMouseDownMiddleLine.bind(this), false);
         };
 
         o.onMouseDownMiddleLine = function () {
@@ -26,6 +27,8 @@ var ViewController = {
             this.wrapper.classList.add("no-select");
             document.addEventListener("mousemove", this.onMouseMoveMiddleLine, false);
             document.addEventListener("mouseup", this.onMouseUpMiddleLine, false);
+            // document.addEventListener("touchmove", this.onMouseMoveMiddleLine, false);
+            // document.addEventListener("touchend", this.onMouseUpMiddleLine, false);
         };
 
         o.onMouseMoveMiddleLine = function (event) {
@@ -43,6 +46,8 @@ var ViewController = {
             o.wrapper.classList.remove("no-select");
             document.removeEventListener("mousemove", o.onMouseMoveMiddleLine, false);
             document.removeEventListener("mouseup", o.onMouseUpMiddleLine, false);
+            // document.removeEventListener("touchmove", o.onMouseMoveMiddleLine, false);
+            // document.removeEventListener("touchend", o.onMouseUpMiddleLine, false);            
         };
 
         o.initialize();
